@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/dheeraj/Desktop/ExoPlayer/lib/pegdown-1.4.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d96db502ed832df867ff5d918f05b51ba3879ea7">
+        <dex dex="/home/dheeraj/Desktop/ExoPlayer/demo/build/intermediates/pre-dexed/debug/pegdown-1.4.2-e241c638e85595c1a22b2b9562c6c7054e9d50f5.jar" />
+    </item>
+    <item
+        jar="/home/dheeraj/Desktop/ExoPlayer/lib/library.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d5ece6a93d9d6e58c95f4d03625a64c3080517e2">
+        <dex dex="/home/dheeraj/Desktop/ExoPlayer/demo/build/intermediates/pre-dexed/debug/library-136d422a250931833699b0dc35d4f4f5c17a0ba0.jar" />
+    </item>
+
+</items>
