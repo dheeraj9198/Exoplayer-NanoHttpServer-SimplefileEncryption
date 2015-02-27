@@ -102,10 +102,11 @@ public class PlayerActivity extends Activity implements SurfaceHolder.Callback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toast.makeText(PlayerActivity.this,"starting server",Toast.LENGTH_LONG).show();
-        FileServer.startServer("/sdcard/Download/manifestE.mpd");
+        // Toast.makeText(PlayerActivity.this,"starting server",Toast.LENGTH_LONG).show();
+        // FileServer.startServer("/sdcard/Download/manifestE.mpd");
 
         Intent intent = getIntent();
+        
         contentUri = intent.getData();
 
         Toast.makeText(PlayerActivity.this,"URI = "+contentUri,Toast.LENGTH_LONG).show();

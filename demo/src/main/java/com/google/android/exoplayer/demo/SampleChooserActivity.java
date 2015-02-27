@@ -40,110 +40,113 @@ import android.widget.TextView;
  */
 public class SampleChooserActivity extends Activity {
 
-  private static final String TAG = "SampleChooserActivity";
+    private static final String TAG = "SampleChooserActivity";
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.sample_chooser_activity);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.sample_chooser_activity);
 
-    ListView sampleList = (ListView) findViewById(R.id.sample_list);
-    final SampleAdapter sampleAdapter = new SampleAdapter(this);
+        ListView sampleList = (ListView) findViewById(R.id.sample_list);
+        final SampleAdapter sampleAdapter = new SampleAdapter(this);
 
-    sampleAdapter.add(new Header("YouTube DASH"));
-    sampleAdapter.addAll((Object[]) Samples.YOUTUBE_DASH_MP4);
-    sampleAdapter.add(new Header("Widevine GTS DASH"));
-    sampleAdapter.addAll((Object[]) Samples.WIDEVINE_GTS);
-    sampleAdapter.add(new Header("SmoothStreaming"));
-    sampleAdapter.addAll((Object[]) Samples.SMOOTHSTREAMING);
-    sampleAdapter.add(new Header("HLS"));
-    sampleAdapter.addAll((Object[]) Samples.HLS);
-    sampleAdapter.add(new Header("Misc"));
-    sampleAdapter.addAll((Object[]) Samples.MISC);
+        sampleAdapter.add(new Header("YouTube DASH"));
+        sampleAdapter.addAll((Object[]) Samples.YOUTUBE_DASH_MP4);
+        sampleAdapter.add(new Header("Widevine GTS DASH"));
+        sampleAdapter.addAll((Object[]) Samples.WIDEVINE_GTS);
+        sampleAdapter.add(new Header("SmoothStreaming"));
+        sampleAdapter.addAll((Object[]) Samples.SMOOTHSTREAMING);
+        sampleAdapter.add(new Header("HLS"));
+        sampleAdapter.addAll((Object[]) Samples.HLS);
+        sampleAdapter.add(new Header("Misc"));
+        sampleAdapter.addAll((Object[]) Samples.MISC);
 
-    // Add WebM samples if the device has a VP9 decoder.
-    try {
-      if (MediaCodecUtil.getDecoderInfo(MimeTypes.VIDEO_VP9, false) != null) {
-        sampleAdapter.add(new Header("YouTube WebM DASH (Experimental)"));
-        sampleAdapter.addAll((Object[]) Samples.YOUTUBE_DASH_WEBM);
-      }
-    } catch (DecoderQueryException e) {
-      Log.e(TAG, "Failed to query vp9 decoder", e);
+        // Add WebM samples if the device has a VP9 decoder.
+        try {
+            if (MediaCodecUtil.getDecoderInfo(MimeTypes.VIDEO_VP9, false) != null) {
+                sampleAdapter.add(new Header("YouTube WebM DASH (Experimental)"));
+                sampleAdapter.addAll((Object[]) Samples.YOUTUBE_DASH_WEBM);
+            }
+        } catch (DecoderQueryException e) {
+            Log.e(TAG, "Failed to query vp9 decoder", e);
+        }
+
+        sampleList.setAdapter(sampleAdapter);
+        sampleList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object item = sampleAdapter.getItem(position);
+                if (item instanceof Sample) {
+                    onSampleSelected((Sample) item);
+                }
+            }
+        });
     }
 
-    sampleList.setAdapter(sampleAdapter);
-    sampleList.setOnItemClickListener(new OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Object item = sampleAdapter.getItem(position);
-        if (item instanceof Sample) {
-          onSampleSelected((Sample) item);
-        }
-      }
-    });
-  }
-
-  private void onSampleSelected(Sample sample) {
-    Intent mpdIntent = new Intent(this, PlayerActivity.class)
-        .setData(Uri.parse(
+    private void onSampleSelected(Sample sample) {
+        Intent mpdIntent = new Intent(this, PlayerActivity.class)
+                .setData(Uri.parse(
+                        "http://54.169.225.1:1935/vod-aes/mp4:aac_video_960x540_high.mp4/playlist.m3u8"
 /*
                 "http://54.86.202.143:1935/vod_android/mp4:sample.mp4/manifest.mpd"
 */
-        "http://127.0.0.1:10000/manifest.mpd"
+/*
+        "http://127.0.0.1:10000/manifestE.mpd"
+*/
 /*
         "file:///sdcard/Download/test/manifest.mpd"
 */
          /*sample.uri*/
          /*"http://frontend.test.superprofs.com:1935/vod_android/mp4:sample.mp4/manifest.mpd"*/))
-        .putExtra(PlayerActivity.CONTENT_TYPE_EXTRA, /*sample.type*/DemoUtil.TYPE_DASH);
-    startActivity(mpdIntent);
-  }
-
-  private static class SampleAdapter extends ArrayAdapter<Object> {
-
-    public SampleAdapter(Context context) {
-      super(context, 0);
+                .putExtra(PlayerActivity.CONTENT_TYPE_EXTRA, /*sample.type*/DemoUtil.TYPE_HLS);
+        startActivity(mpdIntent);
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-      View view = convertView;
-      if (view == null) {
-        int layoutId = getItemViewType(position) == 1 ? android.R.layout.simple_list_item_1
-            : R.layout.sample_chooser_inline_header;
-        view = LayoutInflater.from(getContext()).inflate(layoutId, null, false);
-      }
-      Object item = getItem(position);
-      String name = null;
-      if (item instanceof Sample) {
-        name = ((Sample) item).name;
-      } else if (item instanceof Header) {
-        name = ((Header) item).name;
-      }
-      ((TextView) view).setText(name);
-      return view;
+    private static class SampleAdapter extends ArrayAdapter<Object> {
+
+        public SampleAdapter(Context context) {
+            super(context, 0);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                int layoutId = getItemViewType(position) == 1 ? android.R.layout.simple_list_item_1
+                        : R.layout.sample_chooser_inline_header;
+                view = LayoutInflater.from(getContext()).inflate(layoutId, null, false);
+            }
+            Object item = getItem(position);
+            String name = null;
+            if (item instanceof Sample) {
+                name = ((Sample) item).name;
+            } else if (item instanceof Header) {
+                name = ((Header) item).name;
+            }
+            ((TextView) view).setText(name);
+            return view;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return (getItem(position) instanceof Sample) ? 1 : 0;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
     }
 
-    @Override
-    public int getItemViewType(int position) {
-      return (getItem(position) instanceof Sample) ? 1 : 0;
+    private static class Header {
+
+        public final String name;
+
+        public Header(String name) {
+            this.name = name;
+        }
+
     }
-
-    @Override
-    public int getViewTypeCount() {
-      return 2;
-    }
-
-  }
-
-  private static class Header {
-
-    public final String name;
-
-    public Header(String name) {
-      this.name = name;
-    }
-
-  }
 
 }
