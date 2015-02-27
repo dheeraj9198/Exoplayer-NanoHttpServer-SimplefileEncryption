@@ -86,7 +86,10 @@ public class SampleChooserActivity extends Activity {
     private void onSampleSelected(Sample sample) {
         Intent mpdIntent = new Intent(this, PlayerActivity.class)
                 .setData(Uri.parse(
+                        "http://54.169.225.1/dash/manifest.mpd"
+/*
                         "http://54.169.225.1:1935/vod-aes/mp4:aac_video_960x540_high.mp4/playlist.m3u8"
+*/
 /*
                 "http://54.86.202.143:1935/vod_android/mp4:sample.mp4/manifest.mpd"
 */
@@ -98,7 +101,7 @@ public class SampleChooserActivity extends Activity {
 */
          /*sample.uri*/
          /*"http://frontend.test.superprofs.com:1935/vod_android/mp4:sample.mp4/manifest.mpd"*/))
-                .putExtra(PlayerActivity.CONTENT_TYPE_EXTRA, /*sample.type*/DemoUtil.TYPE_HLS);
+                .putExtra(PlayerActivity.CONTENT_TYPE_EXTRA, /*sample.type*/DemoUtil.TYPE_DASH);
         startActivity(mpdIntent);
     }
 
